@@ -1,0 +1,45 @@
+{
+    "name": "exiva",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "dev": "ts-node-dev --inspect=0.0.0.0:7001 --exit-child --respawn source/main/index.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "db.spawn": "docker run -d -p 5432:5432 --name collector-db -e POSTGRES_PASSWORD=collector postgres",
+        "knex:migrate:make": "knex --knexfile knexfile.ts migrate:make -x ts",
+        "knex:migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
+        "knex:migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dwarf-bridge/exiva.git"
+    },
+    "keywords": [],
+    "author": "Nícolas 'Nohaleh' Deçordi",
+    "license": "GPL-3",
+    "bugs": {
+        "url": "https://github.com/dwarf-bridge/exiva/issues"
+    },
+    "homepage": "https://github.com/dwarf-bridge/exiva#readme",
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.10",
+        "dotenv": "^10.0.0",
+        "knex": "^0.95.12",
+        "node-cron": "^3.0.0",
+        "node-fetch": "^2.6.1",
+        "pg": "^8.7.1",
+        "reflect-metadata": "^0.1.13",
+        "tsyringe": "^4.6.0"
+    },
+    "devDependencies": {
+        "@types/knex": "^0.16.1",
+        "@types/node": "^16.11.6",
+        "@types/node-cron": "^3.0.0",
+        "@types/node-fetch": "^2.5.12",
+        "@types/pg": "^8.6.1",
+        "prettier": "^2.4.1",
+        "ts-node-dev": "^1.1.8",
+        "typescript": "^4.4.4"
+    }
+}
