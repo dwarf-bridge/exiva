@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  database:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - TZ=${TZ}
+    env_file:
+      - ./.env
+    volumes:
+      - "./data/postgres:/var/lib/postgresql/data"
+    ports:
+      - 5432:5432
