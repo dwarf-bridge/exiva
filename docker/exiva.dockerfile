@@ -11,7 +11,7 @@ RUN npm install
 COPY --chown=node:node . .
 RUN npm run build
 
-FROM node:14-alpine as builder
+FROM node:14-alpine
 RUN mkdir -p /home/exiva/node_modules && chown -R node:node /home/exiva
 WORKDIR /home/exiva/
 COPY package*.json ./
