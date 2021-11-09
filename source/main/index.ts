@@ -6,9 +6,14 @@ import cron from 'node-cron'
 
 const exiva = Container.resolve(tokens.Exiva) as Exiva
 
-cron.schedule('*/10 * * * *', () => {
-    exiva.run()
-}, {
-    scheduled: true,
-    timezone: 'America/Sao_Paulo',
-})
+console.info("Exiva is running")
+cron.schedule(
+    '*/15 * * * *',
+    () => {
+        exiva.run()
+    },
+    {
+        scheduled: true,
+        timezone: 'America/Sao_Paulo',
+    }
+)

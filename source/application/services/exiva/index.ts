@@ -108,8 +108,9 @@ export class Exiva {
     }
 
     public async run() {
-        console.log('Running...')
-        const page = await this.collect('Nossobra')
+        const world = 'Nossobra'
+        console.log(`Gathering online checks for ${world} at ${new Date()}`)
+        const page = await this.collect(world)
 
         if (page) {
             console.time('online-checking')
@@ -121,5 +122,6 @@ export class Exiva {
             this.store();
         }
         this.emit()
+        console.log(`Online check for ${world} just completed at ${new Date()}`!)
     }
 }
