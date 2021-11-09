@@ -9,7 +9,8 @@
         "db.spawn": "docker run -d -p 5432:5432 --name collector-db -e POSTGRES_PASSWORD=collector postgres",
         "knex:migrate:make": "knex --knexfile knexfile.ts migrate:make -x ts",
         "knex:migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
-        "knex:migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback"
+        "knex:migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+        "build": "tsc --build tsconfig.json"
     },
     "repository": {
         "type": "git",
