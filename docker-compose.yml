@@ -9,8 +9,31 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - TZ=${TZ}
     env_file:
-      - ./.env
+      - .env
     volumes:
       - "./data/postgres:/var/lib/postgresql/data"
     ports:
       - 5432:5432
+    networks:
+      - boat-network
+  exiva:
+    build:
+      context: .
+      dockerfile: docker/exiva.dockerfile
+    environment:
+      - EXPOSING_PORT=${EXPOSING_PORT}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_POOL_MIN=1
+      - DATABASE_POOL_MAX=10
+      - TZ=${TZ}
+    env_file:
+      - .env
+    networks:
+      - boat-network
+    depends_on:
+      - database
+networks:
+  boat-network:
+    driver: bridge
