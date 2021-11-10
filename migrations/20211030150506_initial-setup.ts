@@ -203,6 +203,12 @@ export async function up(knex: Knex): Promise<void> {
 
             table.string('character_name').notNullable().comment("Character's name")
             table.integer('character_level').notNullable().comment("Character's level")
+            table
+            .uuid('game_world')
+            .notNullable()
+            .comment('Game World')
+            .references('id')
+            .inTable(`${Database.schema}.game_worlds`)
             table.datetime('online_at').notNullable().comment("Character was online at this datetime")
         })
 
@@ -215,7 +221,15 @@ export async function up(knex: Knex): Promise<void> {
             table.timestamps(true, true)
             
             table.string('action_name').notNullable().comment("Action's name")
-            table.string('world_name').notNullable().comment("World's name")
+            table.uuid('world_id').notNullable().comment("Gameworld Id")
+            table
+            .enum('state', [ 
+                'QUEUED',
+                'RUNNING',
+                'COMPLETED',
+                'CANCELLED',
+                'ERROR',
+            ]).notNullable()
             table.datetime('executed_at').notNullable().comment("Execution datetime")
         })
         console.info("The migrations has been applied.")
