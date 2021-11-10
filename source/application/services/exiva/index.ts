@@ -1,5 +1,5 @@
 import { Fetch } from '../fetch'
-import Config from '../../../config'
+import Config, { Database } from '../../../config'
 import { inject, injectable } from 'tsyringe'
 import { tokens } from '../../../di/tokens'
 import cheerio, { load } from 'cheerio'
@@ -39,11 +39,16 @@ export type CharacterOnlineEntry = {
 @injectable()
 export class Exiva {
     private page: Page | null = null
+    private world: { name: string, id: string } | null = null;
     private content: CharacterOnlineRow[] = []
 
     constructor(@inject(tokens.Postgres) private db?: Postgres) {}
 
     public async collect(world: string): Promise<string | undefined> {
+        const worlds: {id: string, name: string}[] = await this.db?.instance
+        .select('id', 'name')
+        .from(`${Database.schema}.game_worlds`)!
+        this.world = worlds.filter(x => x.name === world).shift()!;
         try {
             const result = await Fetch.get(
                 Config.ONLINE_CHECKING_URL + `${world}`
@@ -91,6 +96,11 @@ export class Exiva {
 
     public async store() {
         const execution_time = new Date();
+        if (this.content.length === 0) {
+            console.info('There is no player online');
+            return;
+        }
+        
         await this.db?.instance<CharacterOnlineEntry>('collection.online_checks').insert(this.content.map(entry => ({
             character_name: entry.character_name,
             character_level: entry.level,
