@@ -4,6 +4,7 @@ import { inject, injectable } from 'tsyringe'
 import { tokens } from '../../../di/tokens'
 import cheerio, { load } from 'cheerio'
 import { Postgres } from '../../../infrastructure/database/postgres'
+import { wait } from '../../../main/utils/wait'
 
 /**
  * Observations
@@ -136,6 +137,7 @@ export class Exiva {
                 this.parse(processed)
                 await this.store(world.id)
             }
+            await wait(100)
         }
         this.emit()
     }
