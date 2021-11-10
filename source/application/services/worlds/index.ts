@@ -10,7 +10,6 @@ import { tokens } from '../../../di/tokens'
 import { Postgres } from '../../../infrastructure/database/postgres'
  
 export const get_worlds = async () => {
-    console.log(`Requesting to ${config.WORLDS_URL}`)
     return Fetch.get(config.WORLDS_URL)
 }
 
@@ -34,7 +33,8 @@ export class WorldCollector {
                 this.handle_prohibited_access()
             }
 
-            this.world_page = await worlds_page_request.text()
+            this.world_page = await worlds_page_request.data;
+            // this.world_page = await worlds_page_request.text()
 
             return this.world_page
         } catch (err) {
@@ -62,23 +62,6 @@ export class WorldCollector {
     public async populate_game_worlds() {
         await this.collect()
         this.process()
-        // const repository = new game_worlds_repository()
-        // const current_worlds: GameWorldRow[] = await repository.getAllIn(this.summaries.map(world => world.name))
-        // const new_worlds: GameWorldRow[] = []
-        // await Promise.allSettled(this.summaries.map(async (game_world) => {
-        //     const curr_world = current_worlds.find(wrd => wrd.name === game_world.name)
-
-        //     if (curr_world) {
-        //         await repository.update(game_world)
-        //     }
-
-        //     const { online_players, was_online, ...rest } = game_world
-        //     new_worlds.push(rest)
-        // }))
-
-        // if (new_worlds.length) {
-        //     await repository.createMany(new_worlds)
-        // }
     }
 
     private async handle_prohibited_access() {
@@ -156,8 +139,6 @@ export class WorldCollector {
 
     public async run() {
         await this.collect_and_process()
-        console.log(this.summaries)
-
         return
     }
 }
