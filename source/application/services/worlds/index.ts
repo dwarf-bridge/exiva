@@ -34,7 +34,6 @@ export class WorldCollector {
             }
 
             this.world_page = await worlds_page_request.data;
-            // this.world_page = await worlds_page_request.text()
 
             return this.world_page
         } catch (err) {
@@ -68,14 +67,12 @@ export class WorldCollector {
         console.error(
             `Retrying world_summary at ${new Date()} because of prohibited access`
         )
-        return this.collect()
     }
 
     private async handle_timeout_request() {
         console.error(
             `Retrying world_summary at ${new Date()} because of timeout request`
         )
-        return this.collect()
     }
 
     public async store() {
