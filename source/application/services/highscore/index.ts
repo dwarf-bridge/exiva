@@ -10,7 +10,9 @@ import Config, { Database } from '../../../config'
 import { Fetch } from '../fetch'
 import { tokens } from '../../../di/tokens'
 import { Postgres } from '../../../infrastructure/database/postgres'
-import { stringify } from 'querystring'
+import { Container } from '../../../di/container'
+import { WorldCollector } from '../worlds'
+import { wait } from '../../../main/utils/wait'
 
 const mount_highscore_uri = (
     world: string,
@@ -48,6 +50,7 @@ export const get_highscore_page = async (
  *  - Failures keep a endless loop.
  */
 
+type World = { id: string; name: string }
 @injectable()
 export class HighscoreCollector {
     private world: string | null = null
@@ -67,25 +70,16 @@ export class HighscoreCollector {
         return this
     }
 
-    public async collect() {
-        // this.worlds = await new game_worlds_repository().getAll()
-        this.worlds = await this.db?.instance
-            .select('id', 'name')
-            .from(`${Database.schema}.game_worlds`)!
+    public async collect(game_world_name: string) {
         this.categories = await this.db?.instance
             .select('category', 'reference')
             .from(`${Database.schema}.highscore_categories`)!
-
-        if (!this.world) {
-            console.info('Set a world.')
-            return
-        }
 
         const maxPage = 20
         for (let page = 1; page <= maxPage; page++) {
             try {
                 const ranking_page = await get_highscore_page(
-                    this.world,
+                    game_world_name,
                     this.category.toString(),
                     '0',
                     page
@@ -95,7 +89,8 @@ export class HighscoreCollector {
                     this.handle_prohibited_access()
                 }
 
-                this.ranking_pages.push(await ranking_page.text())
+                this.ranking_pages.push(ranking_page.data)
+                await wait(100)
             } catch (err) {
                 await this.handle_timeout_request()
             }
@@ -122,20 +117,18 @@ export class HighscoreCollector {
         return this.rankings
     }
 
-    public async collect_and_process() {
-        await this.collect()
+    public async collect_and_process(world: World) {
+        await this.collect(world.name)
         this.process()
-        await this.store()
+        await this.store(world.id)
     }
 
-    private async store() {
+    private async store(game_world_id: string) {
         const rankings = this.rankings.map((rank) => {
             return {
                 ...rank,
                 date: new Date(),
-                game_world: this.worlds.find(
-                    (world) => world.name === rank.game_world
-                )?.id!,
+                game_world: game_world_id,
                 category: this.category,
             }
         })
@@ -145,19 +138,25 @@ export class HighscoreCollector {
 
     private async handle_prohibited_access() {
         console.error(
-            `Retrying online_checker_service at ${new Date()} because of prohibited access`
+            `Retrying highscore at ${new Date()} because of prohibited access`
         )
-        return this.collect()
+        // return this.collect()
     }
 
     private async handle_timeout_request() {
         console.error(
-            `Retrying online_checker_service at ${new Date()} because of timeout request`
+            `Retrying highscore at ${new Date()} because of timeout request`
         )
-        return this.collect()
+        // return this.collect()
     }
 
-    public run() {
-        this.collect_and_process()
+    public async run() {
+        const worlds: { id: string; name: string }[] = await this.db?.instance
+        .select('id', 'name')
+        .from(`${Database.schema}.game_worlds`)!
+        console.info("worlds", worlds.length)
+        for (let world of worlds) {
+            await this.collect_and_process(world)
+        }
     }
 }
