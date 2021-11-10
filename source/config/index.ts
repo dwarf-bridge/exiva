@@ -36,7 +36,7 @@ export namespace Database {
                 max: Number(process.env.DATABASE_POOL_MAX || 10),
             },
             migrations: {
-                directory: 'migrations',
+                directory: process.env.IS_CONTAINER ? 'build/migrations' : 'migrations',
                 tableName: 'knex_migrations',
             },
         },
@@ -54,7 +54,7 @@ export namespace Database {
                 max: Number(process.env.DATABASE_POOL_MAX),
             },
             migrations: {
-                directory: 'migrations',
+                directory: process.env.IS_CONTAINER ? 'build/migrations' : 'migrations',
                 tableName: 'knex_migrations',
             },
         },
