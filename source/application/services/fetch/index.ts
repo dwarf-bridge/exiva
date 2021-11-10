@@ -1,11 +1,14 @@
-import fetch from 'node-fetch';
+import axios from 'axios'
 import config from '../../../config'
 
 export class Fetch {
     static async get(url: string) {
-        return fetch(`${config.BASE_URL}${url}`, {
+        console.info(`service:fetch | req: ${url}`)
+        return axios(`${config.BASE_URL}${url}`, {
             method: 'GET',
-            headers: {},
+            headers: {
+                "Accept-Encoding": "gzip, deflate",
+            },
         })
     }
 }
