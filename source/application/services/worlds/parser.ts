@@ -51,7 +51,7 @@ export class worlds_summary_parser {
                 online_players
             )
             return {
-                name: name.toLocaleLowerCase(),
+                name: name,
                 location: this.format_server_location(location),
                 pvp_type: this.format_pvp_type(pvp_type),
                 online_players: formatted_online_players_amount,
