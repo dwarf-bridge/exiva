@@ -26,12 +26,14 @@
     "homepage": "https://github.com/dwarf-bridge/exiva#readme",
     "dependencies": {
         "axios": "^0.24.0",
+        "axios-cookiejar-support": "^2.0.3",
         "cheerio": "^1.0.0-rc.10",
         "dotenv": "^10.0.0",
         "knex": "^0.95.12",
         "node-cron": "^3.0.0",
         "pg": "^8.7.1",
         "reflect-metadata": "^0.1.13",
+        "tough-cookie": "^4.0.0",
         "tsyringe": "^4.6.0"
     },
     "devDependencies": {
@@ -40,6 +42,7 @@
         "@types/node": "^16.11.6",
         "@types/node-cron": "^3.0.0",
         "@types/pg": "^8.6.1",
+        "@types/tough-cookie": "^4.0.1",
         "prettier": "^2.4.1",
         "ts-node-dev": "^1.1.8",
         "typescript": "^4.4.4"
