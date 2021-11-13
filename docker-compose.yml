@@ -16,10 +16,26 @@ services:
       - 5432:5432
     networks:
       - boat-network
-  exiva:
+  # exiva:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/exiva.dockerfile
+  #   environment:
+  #     - IS_CONTAINER=true
+  #     - DATABASE_HOSTNAME=database
+  #     - EXPOSING_PORT=${EXPOSING_PORT}
+  #     - POSTGRES_DB=${DATABASE_NAME}
+  #     - POSTGRES_USER=${DATABASE_USERNAME}
+  #     - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+  #     - DATABASE_POOL_MIN=1
+  #     - DATABASE_POOL_MAX=10
+  #     - TZ=${TZ}
+  #   env_file:
+  #     - .env
+  pup:
     build:
       context: .
-      dockerfile: docker/exiva.dockerfile
+      dockerfile: docker/exivapup.dockerfile
     environment:
       - IS_CONTAINER=true
       - DATABASE_HOSTNAME=database
@@ -32,10 +48,16 @@ services:
       - TZ=${TZ}
     env_file:
       - .env
-    networks:
-      - boat-network
-    depends_on:
-      - database
+  # website:
+  #   image: nginx
+  #   restart: always
+  #   volumes:
+  #   - ./static:/usr/share/nginx/html
+  #   ports:
+  #   - "80:80"
+  #   environment:
+  #   - NGINX_HOST=foobar.com
+  #   - NGINX_PORT=80
 networks:
   boat-network:
     driver: bridge
