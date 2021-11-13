@@ -33,6 +33,7 @@
         "knex": "^0.95.12",
         "node-cron": "^3.0.0",
         "pg": "^8.7.1",
+        "puppeteer": "^11.0.0",
         "reflect-metadata": "^0.1.13",
         "tough-cookie": "^4.0.0",
         "tsyringe": "^4.6.0",
