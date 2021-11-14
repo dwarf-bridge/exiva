@@ -99,8 +99,7 @@ export class Exiva {
         return content
     }
 
-    public async store(world_id: string) {
-        const execution_time = new Date()
+    public async store(world_id: string, execution_time: Date) {
         if (this.content.length === 0) {
             console.info('service:online_check | no online players')
             return
@@ -130,12 +129,13 @@ export class Exiva {
         const worlds: { id: string; name: string }[] = await this.db?.instance
             .select('id', 'name')
             .from(`${Database.schema}.game_worlds`)!
+        const execution_date = new Date();
         for (let world of worlds) {
             const page = await this.collect(world.name)
             if (page) {
                 const processed = this.process(page)
                 this.parse(processed)
-                await this.store(world.id)
+                await this.store(world.id, execution_date)
             }
             await wait(150)
         }
