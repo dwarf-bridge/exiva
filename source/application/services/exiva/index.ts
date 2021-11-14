@@ -137,7 +137,7 @@ export class Exiva {
                 this.parse(processed)
                 await this.store(world.id)
             }
-            await wait(100)
+            await wait(150)
         }
         this.emit()
     }
